@@ -33,7 +33,6 @@ public class BotService {
         this.playerAction = playerAction;
     }
 
-    // Tubesnya ubah-ubah ini agar botnya menjadi lebih jago
     public void computeNextPlayerAction(PlayerAction playerAction) {
         playerAction.action = PlayerActions.FORWARD;
         playerAction.heading = new Random().nextInt(360);
