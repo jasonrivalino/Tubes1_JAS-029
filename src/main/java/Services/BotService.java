@@ -32,7 +32,7 @@ public class BotService {
     public void setPlayerAction(PlayerAction playerAction) {
         this.playerAction = playerAction;
     }
-    
+
     public void computeNextPlayerAction(PlayerAction playerAction) {
         // greedy algorithm entelect challenge galaxio 2021
         // player action move forward
@@ -113,17 +113,18 @@ public class BotService {
             // get nearest enemy
             var nearestEnemy = enemy.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
             // get real distance between player and enemy
-            var distanceEnemy = getDistanceBetween(nearestEnemy, bot) - nearestEnemy.getSize()/2 - bot.getSize()/2;
+            // var distanceEnemy = getDistanceBetween(nearestEnemy, bot) - nearestEnemy.getSize()/2 - bot.getSize()/2;
 
+            var radiusWorld = gameState.getWorld().getRadius();
             // eat SUPERFOOD and FOOD and avoid obstacle and enemy
-            if (getDistanceBetween(bot, nearestFood) < 200) {
+            if (getDistanceBetween(bot, nearestFood) < 300) {
                 var headingToFood = getHeadingBetween(nearestFood);
                 playerAction.heading = headingToFood;
-                if (getDistanceBetween(bot, nearestObstacle) < 50) {
+                if (getRealDistance(bot, nearestObstacle) < 50) {
                     var headingToObstacle = getHeadingBetween(nearestObstacle);
-                    playerAction.setHeading(headingToObstacle + 45);
+                    playerAction.setHeading(headingToObstacle + 90);
                 }
-                if (getDistanceBetween(bot, nearestEnemy) < 50) {
+                if (getRealDistance(bot, nearestEnemy) < 50) {
                     var headingToEnemy = getHeadingBetween(nearestEnemy);
                     playerAction.setHeading(headingToEnemy + 180);
                 }
@@ -135,24 +136,24 @@ public class BotService {
                     var headingToObstacle = getHeadingBetween(nearestObstacle);
                     playerAction.setHeading(headingToObstacle + 45);
                 }
-                if (getDistanceBetween(bot, nearestEnemy) < 50) {
+                if (getRealDistance(bot, nearestEnemy) < 50) {
                     var headingToEnemy = getHeadingBetween(nearestEnemy);
                     playerAction.setHeading(headingToEnemy + 45);
                 }
             }
             // greedy by attack enemy use FIRETORPEDOES
             // attack enemy if distance between bot and enemy is less than 250
-            if (getDistanceBetween(bot, nearestEnemy) < 60) {
+            if (getRealDistance(bot, nearestEnemy) < 500 && bot.getSize() > 25) {
                 // set heading to enemy
                 var headingToEnemy = getHeadingBetween(nearestEnemy);
                 playerAction.setHeading(headingToEnemy);
                 playerAction.action = PlayerActions.FIRETORPEDOES;
                 // teleport to enemy if size of enemy is less than size of bot
                 // if the enemy is smaller than the bot, fire teleporter
-                if (getDistanceBetween(nearestEnemy, bot) < 70 &&  nearestEnemy.getSize() < bot.getSize()) {
-                    playerAction.action = PlayerActions.TELEPORT;
+                if (getRealDistance(nearestEnemy, bot) < 400 &&  nearestEnemy.getSize() < bot.getSize()-25) {
+                    playerAction.action = PlayerActions.FIRETELEPORTER;
                     var teleporter = gameState.getGameObjects().stream().filter(gameObject -> gameObject.getGameObjectType() == ObjectTypes.TELEPORTER).collect(Collectors.toList());
-                    if (getDistanceBetween(teleporter.get(0), enemy.get(0)) == 10) {
+                    if (getRealDistance(teleporter.get(0), enemy.get(0)) <= 30) {
                         playerAction.action = PlayerActions.TELEPORT;
                     }
                 }
@@ -189,6 +190,13 @@ public class BotService {
 
     private int toDegrees(double v) {
         return (int) (v * (180 / Math.PI));
+    }
+
+    private double getRealDistance(GameObject object1, GameObject object2){
+        double bot = object1.getSize()/2;
+        double enemy = object2.getSize()/2;
+        return getDistanceBetween(object1, object2) - bot - enemy;
+
     }
 
 
