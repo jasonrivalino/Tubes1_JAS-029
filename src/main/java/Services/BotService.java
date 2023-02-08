@@ -11,6 +11,11 @@ public class BotService {
     private PlayerAction playerAction;
     private GameState gameState;
 
+    private boolean isSudahTembak = false;
+    private boolean isMakanSuper = false;
+    private Integer tik;    
+    
+
     public BotService() {
         this.playerAction = new PlayerAction();
         this.gameState = new GameState();
@@ -117,30 +122,64 @@ public class BotService {
 
             var radiusWorld = gameState.getWorld().getRadius();
             // eat SUPERFOOD and FOOD and avoid obstacle and enemy
-            if (getDistanceBetween(bot, nearestFood) < 300) {
-                var headingToFood = getHeadingBetween(nearestFood);
-                playerAction.heading = headingToFood;
-                if (getRealDistance(bot, nearestObstacle) < 50) {
-                    var headingToObstacle = getHeadingBetween(nearestObstacle);
-                    playerAction.setHeading(headingToObstacle + 90);
-                }
-                if (getRealDistance(bot, nearestEnemy) < 50) {
-                    var headingToEnemy = getHeadingBetween(nearestEnemy);
-                    playerAction.setHeading(headingToEnemy + 180);
-                }
-            }
-            else {
+            
+            if(isMakanSuper) {
                 var headingToFoodd = getHeadingBetween(nearestFoodd);
                 playerAction.heading = headingToFoodd;
-                if (getDistanceBetween(bot, nearestObstacle) < 50) {
-                    var headingToObstacle = getHeadingBetween(nearestObstacle);
-                    playerAction.setHeading(headingToObstacle + 45);
-                }
-                if (getRealDistance(bot, nearestEnemy) < 50) {
-                    var headingToEnemy = getHeadingBetween(nearestEnemy);
-                    playerAction.setHeading(headingToEnemy + 45);
+                System.out.println("MAKAN FOOD");
+                if(tik+5 == gameState.getWorld().getCurrentTick()) {
+                    System.out.println("FOOD");
+                    isMakanSuper = false;
                 }
             }
+            else{
+                var headingToFood = getHeadingBetween(nearestFood);
+                playerAction.heading = headingToFood;
+                System.out.println("MAKAN SUPER FOOD");
+                System.out.println("DISTANCE\t:" + getRealDistance(bot, nearestFood));
+                System.out.println("MAKAN\t\t:" + nearestFood.getSize());
+                System.out.println("BOT\t\t:" + bot.getSize());
+                if(bot.getSize() < 50){
+                    if(getRealDistance(bot, nearestFood) < 20) {
+                        System.out.println("SUPER FOOD");
+                        isMakanSuper = true;
+                        tik = gameState.getWorld().getCurrentTick();
+                    }
+                }else if(bot.getSize() < 100){
+                    if(getRealDistance(bot, nearestFood) < 50) {
+                        System.out.println("SUPER FOOD");
+                        isMakanSuper = true;
+                        tik = gameState.getWorld().getCurrentTick();
+                    }
+                }
+            }
+
+
+
+            // if (getDistanceBetween(bot, nearestFood) < 300) {
+            //     var headingToFood = getHeadingBetween(nearestFood);
+            //     playerAction.heading = headingToFood;
+            //     if (getRealDistance(bot, nearestObstacle) < 50) {
+            //         var headingToObstacle = getHeadingBetween(nearestObstacle);
+            //         playerAction.setHeading(headingToObstacle + 90);
+            //     }
+            //     if (getRealDistance(bot, nearestEnemy) < 50) {
+            //         var headingToEnemy = getHeadingBetween(nearestEnemy);
+            //         playerAction.setHeading(headingToEnemy + 180);
+            //     }
+            // }
+            // else {
+            //     var headingToFoodd = getHeadingBetween(nearestFoodd);
+            //     playerAction.heading = headingToFoodd;
+            //     if (getDistanceBetween(bot, nearestObstacle) < 50) {
+            //         var headingToObstacle = getHeadingBetween(nearestObstacle);
+            //         playerAction.setHeading(headingToObstacle + 45);
+            //     }
+            //     if (getRealDistance(bot, nearestEnemy) < 50) {
+            //         var headingToEnemy = getHeadingBetween(nearestEnemy);
+            //         playerAction.setHeading(headingToEnemy + 45);
+            //     }
+            // }
             // greedy by attack enemy use FIRETORPEDOES
             // attack enemy if distance between bot and enemy is less than 250
             if (getRealDistance(bot, nearestEnemy) < 500 && bot.getSize() > 25) {
