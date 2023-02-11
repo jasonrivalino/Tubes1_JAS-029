@@ -115,6 +115,32 @@ public class BotService {
         this.playerAction = playerAction;
     } 
 
+    private int  GetAttackerResolution(GameObject bot, GameObject attacker, GameObject closestFood){
+        if (closestFood == null){
+            return GetOppositeDirection(bot,attacker);
+        }
+        var distanceToAttacker = getDistanceBetween(attacker);
+        var distanceBetweenAttackerAndFood = getDistanceBetween(attacker,closestFood);
+
+        if (distanceToAttacker > attacker.speed && distanceBetweenAttackerAndFood > distanceToAttacker){
+            System.out.println("Atk is far, going for food");
+            return GetDirection(this.bot, closestFood);
+        }
+        else{
+            System.out.println("Atk is close, running");
+            return GetOppositeDirection(bot,attacker);
+        }
+    }
+
+    private int GetOppositeDirection(GameObject object1, GameObject object2) {
+        return toDegrees(Math.atan2(object2.getPosition().y - object1.getPosition().y, object2.getPosition().x - object1.getPosition().x));
+    }
+
+    private int GetDirection(GameObject bot, GameObject object) {
+        var cartesianDegrees = toDegrees(Math.atan2(object.getPosition().y - bot.getPosition().y, object.getPosition().x - bot.getPosition().x));
+        return cartesianDegrees = (cartesianDegrees + 360) % 360;
+    }
+
     public GameState getGameState() {
         return this.gameState;
     }
@@ -135,6 +161,10 @@ public class BotService {
         return Math.sqrt(triangleX * triangleX + triangleY * triangleY);
     }
 
+    private double getDistanceBetween(GameObject object){
+        return  getDistanceBetween(this.bot,object);
+    }
+
     private int getHeadingBetween(GameObject otherObject) {
         var direction = toDegrees(Math.atan2(otherObject.getPosition().y - bot.getPosition().y,
                 otherObject.getPosition().x - bot.getPosition().x));
@@ -151,6 +181,4 @@ public class BotService {
         return getDistanceBetween(object1, object2) - bot - enemy;
 
     }
-
-
 }
