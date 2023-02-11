@@ -14,8 +14,8 @@ public class BotService {
     private boolean isTeleport = false;
     private boolean isMakanSuper = false;
     private boolean teleportAvailable = true;
-    private Integer tik;
-    private Integer tikSupernova;   
+    private Integer tik = 0;
+    private Integer tikTeleport = 0;  
     
 
     public BotService() {
@@ -57,7 +57,12 @@ public class BotService {
 
             var radiusWorld = gameState.getWorld().getRadius();
             // eat SUPERFOOD and FOOD and avoid obstacle and enemy
-            if(bot.getSize() < 100){
+
+            if(tikTeleport+100 == gameState.getWorld().getCurrentTick()) {
+                teleportAvailable = true;
+            }
+
+            if(bot.getSize()<100){
                 if(isMakanSuper) {
                     var headingToFoodd = getHeadingBetween(nearestFoodd);
                     playerAction.heading = headingToFoodd;
@@ -72,7 +77,7 @@ public class BotService {
                     double jarak = getRealDistance(bot, nearestEnemy);
                     double velo = 20;
                     int timee = (int)jarak/(int)velo;
-                    if(tik+timee == gameState.getWorld().getCurrentTick()){
+                    if(tik+timee <= gameState.getWorld().getCurrentTick()){
                         playerAction.action = PlayerActions.TELEPORT;
                         System.out.println("TELEPORT");
                         isTeleport = false;
@@ -91,25 +96,63 @@ public class BotService {
                         tik = gameState.getWorld().getCurrentTick();
                     }
                 }
-                // && gameState.getWorld().getCurrentTick() > 100
-                if(bot.size>50 && teleportAvailable ) {
-                    playerAction.heading = getHeadingBetween(nearestEnemy);
+
+                if (getRealDistance(bot, nearestEnemy) < 100 && bot.getSize() > 25 && nearestEnemy.getSize() > bot.getSize() && !isTeleport) {
+                    // set heading to enemy
+                    System.out.println("FIRE FIRE");
+                    var headingToEnemy = getHeadingBetween(nearestEnemy);
+                    playerAction.setHeading(headingToEnemy);
+                    playerAction.action = PlayerActions.FIRETORPEDOES;
+                }
+
+                if(bot.size>50 && teleportAvailable && (bot.getSize()-20 > nearestEnemy.getSize()) && getRealDistance(bot, nearestEnemy) > 100 && !isTeleport) {
+                    var headingToEnemy = getHeadingBetween(nearestEnemy);
+                    playerAction.setHeading(headingToEnemy);
                     playerAction.action = PlayerActions.FIRETELEPORT;
                     tik = gameState.getWorld().getCurrentTick();
+                    tikTeleport = gameState.getWorld().getCurrentTick();
                     System.out.println("TEMBAK TELEPORT");
                     System.out.println(tik);
                     isTeleport = true;
                     teleportAvailable = false;
+                    isMakanSuper = false;
                 }
             }
             else{
-                if (getRealDistance(bot, nearestEnemy) < 250 && bot.getSize() > 25) {
+                
+                if(isTeleport){
+                    double jarak = getRealDistance(bot, nearestEnemy);
+                    double velo = 20;
+                    int timee = (int)jarak/(int)velo;
+                    if(tik+timee <= gameState.getWorld().getCurrentTick()){
+                        playerAction.action = PlayerActions.TELEPORT;
+                        System.out.println("TELEPORT");
+                        isTeleport = false;
+                    }
+                }
+                else{
+                    if (getRealDistance(bot, nearestEnemy) < 250 && bot.getSize() > 25 && nearestEnemy.getSize() > bot.getSize()) {
                         // set heading to enemy
                         System.out.println("FIRE FIRE");
                         var headingToEnemy = getHeadingBetween(nearestEnemy);
                         playerAction.setHeading(headingToEnemy);
                         playerAction.action = PlayerActions.FIRETORPEDOES;
+                    }else if(teleportAvailable  && (bot.getSize()-20 > nearestEnemy.getSize()) && getRealDistance(bot, nearestEnemy)>250) {
+                        var headingToEnemy = getHeadingBetween(nearestEnemy);
+                        playerAction.setHeading(headingToEnemy);
+                        playerAction.action = PlayerActions.FIRETELEPORT;
+                        tik = gameState.getWorld().getCurrentTick();
+                        tikTeleport = gameState.getWorld().getCurrentTick();
+                        System.out.println("TEMBAK TELEPORT");
+                        System.out.println(tik);
+                        isTeleport = true;
+                        teleportAvailable = false;
                     }
+                    else{
+                        var headingToEnemy = getHeadingBetween(nearestEnemy);
+                        playerAction.setHeading(headingToEnemy);
+                    }
+                }
             }
         }
         this.playerAction = playerAction;
