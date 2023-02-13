@@ -55,9 +55,6 @@ public class BotService {
             // var torpedo = gameState.getGameObjects().stream().filter(gameObject -> gameObject.getGameObjectType() == ObjectTypes.TORPEDOSALVO).collect(Collectors.toList());
             // var nearestTorpedo = torpedo.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
 
-            var radiusWorld = gameState.getWorld().getRadius();
-            // eat SUPERFOOD and FOOD and avoid obstacle and enemy
-
             if(tikTeleport+100 == gameState.getWorld().getCurrentTick()) {
                 teleportAvailable = true;
             }
@@ -117,6 +114,18 @@ public class BotService {
                     teleportAvailable = false;
                     isMakanSuper = false;
                 }
+
+                if (getRealDistance(bot, nearestObstacle) < 50) {
+                    int i = 0;
+                    while (getRealDistance(bot, foodd.get(i)) < 70) {
+                        i++;
+                    }
+                    playerAction.heading = getHeadingBetween(foodd.get(i));
+                }
+
+                if(distanceFromWorldCenter(bot) + (2.5 * bot.getSize()) > gameState.getWorld().getRadius()) {
+                    playerAction.heading = (int)getDirectionPosition(bot, gameState.getWorld().getCenterPoint());
+                }
             }
             else{
                 
@@ -151,38 +160,27 @@ public class BotService {
                     else{
                         var headingToEnemy = getHeadingBetween(nearestEnemy);
                         playerAction.setHeading(headingToEnemy);
+                        if(distanceFromWorldCenter(bot) + (2.5 * bot.getSize()) > gameState.getWorld().getRadius()) {
+                            playerAction.heading = (int)getDirectionPosition(bot, gameState.getWorld().getCenterPoint());
+                        }
                     }
                 }
             }
         }
         this.playerAction = playerAction;
-    } 
-
-    private int  GetAttackerResolution(GameObject bot, GameObject attacker, GameObject closestFood){
-        if (closestFood == null){
-            return GetOppositeDirection(bot,attacker);
-        }
-        var distanceToAttacker = getDistanceBetween(attacker);
-        var distanceBetweenAttackerAndFood = getDistanceBetween(attacker,closestFood);
-
-        if (distanceToAttacker > attacker.speed && distanceBetweenAttackerAndFood > distanceToAttacker){
-            System.out.println("Atk is far, going for food");
-            return GetDirection(this.bot, closestFood);
-        }
-        else{
-            System.out.println("Atk is close, running");
-            return GetOppositeDirection(bot,attacker);
-        }
     }
 
-    private int GetOppositeDirection(GameObject object1, GameObject object2) {
-        return toDegrees(Math.atan2(object2.getPosition().y - object1.getPosition().y, object2.getPosition().x - object1.getPosition().x));
-    }
-
-    private int GetDirection(GameObject bot, GameObject object) {
-        var cartesianDegrees = toDegrees(Math.atan2(object.getPosition().y - bot.getPosition().y, object.getPosition().x - bot.getPosition().x));
+    private int getDirectionPosition(GameObject bot, Position position) {
+        var cartesianDegrees = toDegrees(Math.atan2(position.y - bot.getPosition().y, position.x - bot.getPosition().x));
         return cartesianDegrees = (cartesianDegrees + 360) % 360;
     }
+
+    private double distanceFromWorldCenter(GameObject object) {
+        var triangleX = Math.abs(object.getPosition().x - 0);
+        var triangleY = Math.abs(object.getPosition().y - 0);
+        return Math.sqrt(triangleX * triangleX + triangleY * triangleY);
+    }
+    
 
     public GameState getGameState() {
         return this.gameState;
@@ -202,10 +200,6 @@ public class BotService {
         var triangleX = Math.abs(object1.getPosition().x - object2.getPosition().x);
         var triangleY = Math.abs(object1.getPosition().y - object2.getPosition().y);
         return Math.sqrt(triangleX * triangleX + triangleY * triangleY);
-    }
-
-    private double getDistanceBetween(GameObject object){
-        return  getDistanceBetween(this.bot,object);
     }
 
     private int getHeadingBetween(GameObject otherObject) {
