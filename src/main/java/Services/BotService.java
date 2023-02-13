@@ -52,7 +52,7 @@ public class BotService {
             var nearestObstacle = obstacle.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
             var nearestEnemy = enemy.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
             var smallestEnemy = enemy.stream().min(Comparator.comparing(gameObject -> gameObject.getSize()-bot.getSize())).get();
-            // var torpedo = gameState.getGameObjects().stream().filter(gameObject -> gameObject.getGameObjectType() == ObjectTypes.TORPEDOSALVO).collect(Collectors.toList());
+            var torpedo = gameState.getGameObjects().stream().filter(gameObject -> gameObject.getGameObjectType() == ObjectTypes.TORPEDOSALVO).collect(Collectors.toList());
             // var nearestTorpedo = torpedo.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
 
             if(tikTeleport+100 == gameState.getWorld().getCurrentTick()) {
@@ -139,6 +139,14 @@ public class BotService {
                         isTeleport = false;
                     }
                 }
+                if (torpedo.size() > 0){
+                    var nearestTorpedo = torpedo.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
+                    if (getDistanceBetween(bot, nearestTorpedo) < 50 || (getRealDistance(bot, nearestEnemy) < 55 || nearestEnemy.getSize() > bot.getSize()) || getDistanceBetween(bot,nearestObstacle) < 30){
+                        playerAction.action = PlayerActions.ACTIVATESHIELD;
+                        System.out.println("ACTIVATE SHIELD");
+                    }
+                }
+
                 else{
                     if (getRealDistance(bot, nearestEnemy) < 250 && bot.getSize() > 25 && nearestEnemy.getSize() > bot.getSize()) {
                         // set heading to enemy
