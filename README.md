@@ -66,7 +66,31 @@ Galaxio adalah sebuah game battle royale yang mempertandingkan bot kapal anda de
  ```
  
 ## Cara Menjalankan Program
- 
+Langkah-langkah proses setup program adalah sebagai berikut:
+1. Download starter-pack.zip yang terdapat pada link berikut -> [(Link Starter-Pack)](https://github.com/EntelectChallenge/2021-Galaxio/releases/tag/2021.3.2)
+2. Extract starter-pack.zip yang sudah didownload
+3. Clone Repository Github ini pada `..\starter-pack\starter-bots`
+4. Download file run.bat yang ada pada link berikut -> [(Link Runner)](https://drive.google.com/file/d/1MDKsT4PWi_Ag_GkloMwkZPAvl_bnMK-4/view?usp=share_link)
+5. Pindahkan file run.bat yang sudah didownload pada `..\starter-pack`
+6. Jalankan file run.bat hingga program selesai, jika sudah selesai bisa dicek pada `..\starter-pack\logger-publish`, akan terbentuk dua file GameStateLog.json baru
+7. Copy address dari lokasi file ini `..\starter-pack\logger-publish`
+8. Extract program Galaxio yang terdapat pada `..\starter-pack\visualiser`
+9. Jalankan program Galaxio yang sudah diekstrak sebelumnya
+10. Pada menu Game Galaxio, pilih menu options dan paste copy address lokasi file pada step nomor 7 di log files location
+
+![log_file_location](https://user-images.githubusercontent.com/91790457/218540322-fae3cf2e-c55f-47fb-b40f-d3292b64a0f2.png)
+
+11. Untuk melihat permainan, pilih menu load dan pilih data GameStateLog.json yang telah terbentuk sebelumnya
+
+![load_log](https://user-images.githubusercontent.com/91790457/218541925-338ca780-1a1e-4066-a105-9f349418cadb.png)
+
+
+
+12. Klik start untuk melihat hasil permainan
+13. Jika ingin bermain lagi, bisa menjalankan file run.bat kembali dan membuka program Galaxio serta melakukan load file seperti step sebelumnya
+
+
+<p align="center"><b>SELAMAT BERMAIN DAN BERSENANG-SENANG :)</b></p>
 
 ## Acknowledgements
 - Tuhan Yang Maha Esa
