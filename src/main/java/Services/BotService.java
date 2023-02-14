@@ -43,23 +43,50 @@ public class BotService {
     public void computeNextPlayerAction(PlayerAction playerAction) {
         playerAction.action = PlayerActions.FORWARD;
         if (!gameState.getGameObjects().isEmpty()) {
-            var food = gameState.getGameObjects().stream().filter(gameObject -> gameObject.getGameObjectType() == ObjectTypes.SUPERFOOD).collect(Collectors.toList());
-            var foodd = gameState.getGameObjects().stream().filter(gameObject -> gameObject.getGameObjectType() == ObjectTypes.FOOD).collect(Collectors.toList());
-            var obstacle = gameState.getGameObjects().stream().filter(gameObject -> gameObject.getGameObjectType() == ObjectTypes.GASCLOUD || gameObject.getGameObjectType() == ObjectTypes.ASTEROIDFIELD).collect(Collectors.toList());
-            var enemy = gameState.getPlayerGameObjects().stream().filter(gameObject -> gameObject.getGameObjectType() == ObjectTypes.PLAYER && gameObject.getId() != bot.getId()).collect(Collectors.toList());
-            var nearestFood = food.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
-            var nearestFoodd = foodd.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
-            var nearestObstacle = obstacle.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
-            var nearestEnemy = enemy.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
-            var smallestEnemy = enemy.stream().min(Comparator.comparing(gameObject -> gameObject.getSize()-bot.getSize())).get();
-            var torpedo = gameState.getGameObjects().stream().filter(gameObject -> gameObject.getGameObjectType() == ObjectTypes.TORPEDOSALVO).collect(Collectors.toList());
-            // var nearestTorpedo = torpedo.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
+            var food = gameState.getGameObjects()
+                .stream().filter(gameObject -> gameObject
+                .getGameObjectType() == ObjectTypes.SUPERFOOD)
+                .collect(Collectors.toList());
+            var foodd = gameState.getGameObjects()
+                .stream().filter(gameObject -> gameObject
+                .getGameObjectType() == ObjectTypes.FOOD)
+                .collect(Collectors.toList());
+            var obstacle = gameState.getGameObjects()
+                .stream().filter(gameObject -> gameObject
+                .getGameObjectType() == ObjectTypes.GASCLOUD || gameObject.getGameObjectType() == ObjectTypes.ASTEROIDFIELD)
+                .collect(Collectors.toList());
+            var enemy = gameState.getPlayerGameObjects()
+                .stream().filter(gameObject -> gameObject
+                .getGameObjectType() == ObjectTypes.PLAYER && gameObject.getId() != bot.getId())
+                .collect(Collectors.toList());
+            var nearestFood = food
+                .stream().min(Comparator
+                .comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
+            var nearestFoodd = foodd
+                .stream().min(Comparator
+                .comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
+            var nearestObstacle = obstacle
+                .stream().min(Comparator
+                .comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
+            var nearestEnemy = enemy
+                .stream().min(Comparator
+                .comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
+            var smallestEnemy = enemy
+                .stream().min(Comparator
+                .comparing(gameObject -> gameObject.getSize()-bot.getSize())).get();
+            var torpedo = gameState.getGameObjects()
+                .stream().filter(gameObject -> gameObject
+                .getGameObjectType() == ObjectTypes.TORPEDOSALVO)
+                .collect(Collectors.toList());
 
-            if(tikTeleport+100 == gameState.getWorld().getCurrentTick()) {
+            // Cek ketersediaan teleport
+            if(tikTeleport + 100 == gameState.getWorld().getCurrentTick()) {
                 teleportAvailable = true;
             }
 
-            if(bot.getSize()<100){
+            // Kondisi ketika ukuran bot lebih kecil dari 100s
+            if(bot.getSize() < 100){
+                // Kondisi setelah makan Superfood
                 if(isMakanSuper) {
                     var headingToFoodd = getHeadingBetween(nearestFoodd);
                     playerAction.heading = headingToFoodd;
@@ -69,6 +96,8 @@ public class BotService {
                         isMakanSuper = false;
                     }
                 }
+
+                // Kondisi ketika ingin teleport
                 else if(isTeleport){
                     // var teleporter = gameState.getGameObjects().stream().filter(gameObject -> gameObject.getGameObjectType() == ObjectTypes.TELEPORTER).collect(Collectors.toList());
                     double jarak = getRealDistance(bot, nearestEnemy);
@@ -80,6 +109,8 @@ public class BotService {
                         isTeleport = false;
                     }
                 }
+
+                // Kondisi belum makan Superfood
                 else{
                     var headingToFood = getHeadingBetween(nearestFood);
                     playerAction.heading = headingToFood;
@@ -94,6 +125,7 @@ public class BotService {
                     }
                 }
 
+                // Kondisi menyerang tembak
                 if (getRealDistance(bot, nearestEnemy) < 100 && bot.getSize() > 25 && nearestEnemy.getSize() > bot.getSize() && !isTeleport) {
                     // set heading to enemy
                     System.out.println("FIRE FIRE");
@@ -102,7 +134,8 @@ public class BotService {
                     playerAction.action = PlayerActions.FIRETORPEDOES;
                 }
 
-                if(bot.size>50 && teleportAvailable && (bot.getSize()-30 > nearestEnemy.getSize()) && getRealDistance(bot, nearestEnemy) > 100 && !isTeleport) {
+                // Kondiisi menembak peluru teleportasi
+                if(bot.size > 50 && teleportAvailable && (bot.getSize() - 30 > nearestEnemy.getSize()) && getRealDistance(bot, nearestEnemy) > 100 && !isTeleport) {
                     var headingToEnemy = getHeadingBetween(nearestEnemy);
                     playerAction.setHeading(headingToEnemy);
                     playerAction.action = PlayerActions.FIRETELEPORT;
@@ -115,6 +148,7 @@ public class BotService {
                     isMakanSuper = false;
                 }
 
+                // Kondisi mengjindari obstacle
                 if (getRealDistance(bot, nearestObstacle) < 50) {
                     int i = 0;
                     while (getRealDistance(bot, foodd.get(i)) < 70) {
@@ -123,12 +157,26 @@ public class BotService {
                     playerAction.heading = getHeadingBetween(foodd.get(i));
                 }
 
+                // Kondisi ketika world mengecil
                 if(distanceFromWorldCenter(bot) + (2.5 * bot.getSize()) > gameState.getWorld().getRadius()) {
                     playerAction.heading = (int)getDirectionPosition(bot, gameState.getWorld().getCenterPoint());
                 }
+
+                // Kondisi aktivasi shield pelindung
+                if (torpedo.size() > 0){
+                    var nearestTorpedo = torpedo.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
+                    var headingToTorpedo = getHeadingBetween(nearestTorpedo);
+                    if (getDistanceBetween(bot, nearestTorpedo) < 50 || headingToTorpedo < 25 || (getRealDistance(bot, nearestEnemy) < 70 || 
+                        nearestEnemy.getSize() > bot.getSize()) || getDistanceBetween(bot,nearestObstacle) < 30){
+                        if (bot.getSize() > 80){
+                            playerAction.action = PlayerActions.ACTIVATESHIELD;
+                            System.out.println("ACTIVATE SHIELD");
+                        }
+                    }
+                }
             }
             else{
-                
+                // Kondisi ketika ingin teleport
                 if(isTeleport){
                     double jarak = getRealDistance(bot, nearestEnemy);
                     double velo = 20;
@@ -139,22 +187,31 @@ public class BotService {
                         isTeleport = false;
                     }
                 }
+
+                // Kondisi aktivasi shield pelindung
                 if (torpedo.size() > 0){
                     var nearestTorpedo = torpedo.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
-                    if (getDistanceBetween(bot, nearestTorpedo) < 50 || (getRealDistance(bot, nearestEnemy) < 70 || nearestEnemy.getSize() > bot.getSize()) || getDistanceBetween(bot,nearestObstacle) < 30){
+                    var headingToTorpedo = getHeadingBetween(nearestTorpedo);
+                    if (getDistanceBetween(bot, nearestTorpedo) < 50 || headingToTorpedo < 25 || (getRealDistance(bot, nearestEnemy) < 70 || 
+                        nearestEnemy.getSize() > bot.getSize()) || getDistanceBetween(bot,nearestObstacle) < 30){
                         playerAction.action = PlayerActions.ACTIVATESHIELD;
                         System.out.println("ACTIVATE SHIELD");
                     }
                 }
 
+                // Kondisi lainnya
                 else{
+                    // Kondisi ketika ingin menembak
                     if (getRealDistance(bot, nearestEnemy) < 250 && bot.getSize() > 25 && nearestEnemy.getSize() > bot.getSize()) {
                         // set heading to enemy
                         System.out.println("FIRE FIRE");
                         var headingToEnemy = getHeadingBetween(nearestEnemy);
                         playerAction.setHeading(headingToEnemy);
                         playerAction.action = PlayerActions.FIRETORPEDOES;
-                    }else if(teleportAvailable  && (bot.getSize()-30 > nearestEnemy.getSize()) && getRealDistance(bot, nearestEnemy)>250) {
+                    }
+
+                    // Kondisi menembak peluru teleportasi
+                    else if(teleportAvailable  && (bot.getSize() - 30 > nearestEnemy.getSize()) && getRealDistance(bot, nearestEnemy)>250) {
                         var headingToEnemy = getHeadingBetween(nearestEnemy);
                         playerAction.setHeading(headingToEnemy);
                         playerAction.action = PlayerActions.FIRETELEPORT;
@@ -165,6 +222,8 @@ public class BotService {
                         isTeleport = true;
                         teleportAvailable = false;
                     }
+
+                    // Kondisi ketika world mengecil
                     else{
                         var headingToEnemy = getHeadingBetween(nearestEnemy);
                         playerAction.setHeading(headingToEnemy);
