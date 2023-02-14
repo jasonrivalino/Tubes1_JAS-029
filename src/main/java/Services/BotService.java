@@ -102,7 +102,7 @@ public class BotService {
                     playerAction.action = PlayerActions.FIRETORPEDOES;
                 }
 
-                if(bot.size>50 && teleportAvailable && (bot.getSize()-20 > nearestEnemy.getSize()) && getRealDistance(bot, nearestEnemy) > 100 && !isTeleport) {
+                if(bot.size>50 && teleportAvailable && (bot.getSize()-30 > nearestEnemy.getSize()) && getRealDistance(bot, nearestEnemy) > 100 && !isTeleport) {
                     var headingToEnemy = getHeadingBetween(nearestEnemy);
                     playerAction.setHeading(headingToEnemy);
                     playerAction.action = PlayerActions.FIRETELEPORT;
@@ -141,7 +141,7 @@ public class BotService {
                 }
                 if (torpedo.size() > 0){
                     var nearestTorpedo = torpedo.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
-                    if (getDistanceBetween(bot, nearestTorpedo) < 50 || (getRealDistance(bot, nearestEnemy) < 55 || nearestEnemy.getSize() > bot.getSize()) || getDistanceBetween(bot,nearestObstacle) < 30){
+                    if (getDistanceBetween(bot, nearestTorpedo) < 50 || (getRealDistance(bot, nearestEnemy) < 70 || nearestEnemy.getSize() > bot.getSize()) || getDistanceBetween(bot,nearestObstacle) < 30){
                         playerAction.action = PlayerActions.ACTIVATESHIELD;
                         System.out.println("ACTIVATE SHIELD");
                     }
@@ -154,7 +154,7 @@ public class BotService {
                         var headingToEnemy = getHeadingBetween(nearestEnemy);
                         playerAction.setHeading(headingToEnemy);
                         playerAction.action = PlayerActions.FIRETORPEDOES;
-                    }else if(teleportAvailable  && (bot.getSize()-20 > nearestEnemy.getSize()) && getRealDistance(bot, nearestEnemy)>250) {
+                    }else if(teleportAvailable  && (bot.getSize()-30 > nearestEnemy.getSize()) && getRealDistance(bot, nearestEnemy)>250) {
                         var headingToEnemy = getHeadingBetween(nearestEnemy);
                         playerAction.setHeading(headingToEnemy);
                         playerAction.action = PlayerActions.FIRETELEPORT;
