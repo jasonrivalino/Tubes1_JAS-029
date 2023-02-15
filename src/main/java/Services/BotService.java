@@ -14,6 +14,7 @@ public class BotService {
     private boolean isTeleport = false;
     private boolean isMakanSuper = false;
     private boolean teleportAvailable = true;
+    private boolean isTembakTorpedo = false;
     private Integer tik = 0;
     private Integer tikTeleport = 0;  
     
@@ -74,7 +75,7 @@ public class BotService {
             var smallestEnemy = enemy
                 .stream().min(Comparator
                 .comparing(gameObject -> gameObject.getSize()-bot.getSize())).get();
-            var torpedo = gameState.getGameObjects()
+            var listTorpedo = gameState.getGameObjects()
                 .stream().filter(gameObject -> gameObject
                 .getGameObjectType() == ObjectTypes.TORPEDOSALVO)
                 .collect(Collectors.toList());
@@ -148,10 +149,10 @@ public class BotService {
                     isMakanSuper = false;
                 }
 
-                // Kondisi mengjindari obstacle
+                // Kondisi menghindari obstacle
                 if (getRealDistance(bot, nearestObstacle) < 50) {
                     int i = 0;
-                    while (getRealDistance(bot, foodd.get(i)) < 70) {
+                    while (getRealDistance(bot, foodd.get(i)) < 30) {
                         i++;
                     }
                     playerAction.heading = getHeadingBetween(foodd.get(i));
@@ -163,15 +164,19 @@ public class BotService {
                 }
 
                 // Kondisi aktivasi shield pelindung
-                if (torpedo.size() > 0){
-                    var nearestTorpedo = torpedo.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
+                if (listTorpedo.size() > 0){
+                    var nearestTorpedo = listTorpedo
+                    .stream().min(Comparator
+                    .comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
                     var headingToTorpedo = getHeadingBetween(nearestTorpedo);
-                    if (getDistanceBetween(bot, nearestTorpedo) < 50 || headingToTorpedo < 25 || (getRealDistance(bot, nearestEnemy) < 70 || 
-                        nearestEnemy.getSize() > bot.getSize()) || getDistanceBetween(bot,nearestObstacle) < 30){
-                        if (bot.getSize() > 80){
-                            playerAction.action = PlayerActions.ACTIVATESHIELD;
-                            System.out.println("ACTIVATE SHIELD");
-                        }
+                    int headingTorpedoToMe = nearestTorpedo.getCurrentHeading();
+                    // System.out.println("HEADING TO TORPEDO\t:" + headingToTorpedo);
+                    // System.out.println("HEADING TORPEDO TO ME\t:" + headingTorpedoToMe);
+                    if (getRealDistance(bot, nearestTorpedo) < 50 && (headingToTorpedo > (headingTorpedoToMe+10)%360 || headingToTorpedo < (headingTorpedoToMe-10)%360)){
+                        System.out.println("HEADING TO TORPEDO\t:" + headingToTorpedo);
+                        System.out.println("HEADING TORPEDO TO ME\t:" + headingTorpedoToMe);
+                        playerAction.action = PlayerActions.ACTIVATESHIELD;
+                        System.out.println("ACTIVATE SHIELD");   
                     }
                 }
             }
@@ -185,17 +190,6 @@ public class BotService {
                         playerAction.action = PlayerActions.TELEPORT;
                         System.out.println("TELEPORT");
                         isTeleport = false;
-                    }
-                }
-
-                // Kondisi aktivasi shield pelindung
-                if (torpedo.size() > 0){
-                    var nearestTorpedo = torpedo.stream().min(Comparator.comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
-                    var headingToTorpedo = getHeadingBetween(nearestTorpedo);
-                    if (getDistanceBetween(bot, nearestTorpedo) < 50 || headingToTorpedo < 25 || (getRealDistance(bot, nearestEnemy) < 70 || 
-                        nearestEnemy.getSize() > bot.getSize()) || getDistanceBetween(bot,nearestObstacle) < 30){
-                        playerAction.action = PlayerActions.ACTIVATESHIELD;
-                        System.out.println("ACTIVATE SHIELD");
                     }
                 }
 
@@ -223,10 +217,26 @@ public class BotService {
                         teleportAvailable = false;
                     }
 
-                    // Kondisi ketika world mengecil
                     else{
                         var headingToEnemy = getHeadingBetween(nearestEnemy);
                         playerAction.setHeading(headingToEnemy);
+                        
+                        // Kondisi aktivasi shield pelindung
+                        if (listTorpedo.size() > 0){
+                            var nearestTorpedo = listTorpedo
+                            .stream().min(Comparator
+                            .comparing(gameObject -> getDistanceBetween(gameObject, bot))).get();
+                            int headingToTorpedo = getHeadingBetween(nearestTorpedo);
+                            int headingTorpedoToMe = nearestTorpedo.getCurrentHeading();
+                            if (getRealDistance(bot, nearestTorpedo) < 50 && (headingToTorpedo > (headingTorpedoToMe+10)%360 || headingToTorpedo < (headingTorpedoToMe-10)%360)){
+                                System.out.println("HEADING TO TORPEDO\t:" + headingToTorpedo);
+                                System.out.println("HEADING TORPEDO TO ME\t:" + headingTorpedoToMe);
+                                playerAction.action = PlayerActions.ACTIVATESHIELD;
+                                System.out.println("ACTIVATE SHIELD");
+                            }
+                        }
+                        
+                        // Puter balik mau nabrak edge
                         if(distanceFromWorldCenter(bot) + (2.5 * bot.getSize()) > gameState.getWorld().getRadius()) {
                             playerAction.heading = (int)getDirectionPosition(bot, gameState.getWorld().getCenterPoint());
                         }
