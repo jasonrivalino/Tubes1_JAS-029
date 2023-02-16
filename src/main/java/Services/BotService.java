@@ -172,7 +172,7 @@ public class BotService {
                     int headingTorpedoToMe = nearestTorpedo.getCurrentHeading();
                     // System.out.println("HEADING TO TORPEDO\t:" + headingToTorpedo);
                     // System.out.println("HEADING TORPEDO TO ME\t:" + headingTorpedoToMe);
-                    if (getRealDistance(bot, nearestTorpedo) < 50 && (headingToTorpedo > (headingTorpedoToMe+10)%360 || headingToTorpedo < (headingTorpedoToMe-10)%360)){
+                    if (getRealDistance(bot, nearestTorpedo) < 50 && ((headingToTorpedo > (headingTorpedoToMe+10)%360 || headingToTorpedo < (headingTorpedoToMe-10)%360)) && bot.getSize() > 80){
                         System.out.println("HEADING TO TORPEDO\t:" + headingToTorpedo);
                         System.out.println("HEADING TORPEDO TO ME\t:" + headingTorpedoToMe);
                         playerAction.action = PlayerActions.ACTIVATESHIELD;
