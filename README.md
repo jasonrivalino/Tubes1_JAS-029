@@ -79,7 +79,9 @@ Langkah-langkah proses setup program adalah sebagai berikut:
 4. Download file run.bat yang ada pada link berikut -> [(Link Runner)](https://drive.google.com/file/d/1MDKsT4PWi_Ag_GkloMwkZPAvl_bnMK-4/view?usp=share_link)
 5. Pindahkan file run.bat yang sudah didownload pada `..\starter-pack`
 6. Ubah isi direction file yang terdapat pada run.bat menjadi lokasi file JAS-029_029.jar yang terdapat pada device masing-masing
+
 ![Screenshot_20230217_222524](https://user-images.githubusercontent.com/91790457/219695394-81e26dd6-eb71-4f33-ad02-31134f46218c.png)
+
 7. Jalankan file run.bat hingga program selesai, jika sudah selesai bisa dicek pada `..\starter-pack\logger-publish`, akan terbentuk dua file GameStateLog.json baru
 8. Copy address dari lokasi file ini `..\starter-pack\logger-publish`
 9. Extract program Galaxio yang terdapat pada `..\starter-pack\visualiser`
