@@ -50,11 +50,11 @@ public class BotService {
                 .collect(Collectors.toList());
             var foodd = gameState.getGameObjects()
                 .stream().filter(gameObject -> gameObject
-                .getGameObjectType() == ObjectTypes.FOOD)
+                .getGameObjectType() == ObjectTypes.FOOD || gameObject.getGameObjectType() == ObjectTypes.SUPERFOOD)
                 .collect(Collectors.toList());
             var obstacle = gameState.getGameObjects()
                 .stream().filter(gameObject -> gameObject
-                .getGameObjectType() == ObjectTypes.GASCLOUD || gameObject.getGameObjectType() == ObjectTypes.ASTEROIDFIELD)
+                .getGameObjectType() == ObjectTypes.GASCLOUD || gameObject.getGameObjectType() == ObjectTypes.WORMHOLE)
                 .collect(Collectors.toList());
             var enemy = gameState.getPlayerGameObjects()
                 .stream().filter(gameObject -> gameObject
@@ -102,8 +102,8 @@ public class BotService {
                 else if(isTeleport){
                     // var teleporter = gameState.getGameObjects().stream().filter(gameObject -> gameObject.getGameObjectType() == ObjectTypes.TELEPORTER).collect(Collectors.toList());
                     double jarak = getRealDistance(bot, nearestEnemy);
-                    double velo = 20;
-                    int timee = (int)jarak/(int)velo;
+                    int velo = 20;
+                    int timee = (int)jarak/velo;
                     if(tik+timee <= gameState.getWorld().getCurrentTick()){
                         playerAction.action = PlayerActions.TELEPORT;
                         System.out.println("TELEPORT");
@@ -159,7 +159,7 @@ public class BotService {
                 }
 
                 // Kondisi ketika world mengecil
-                if(distanceFromWorldCenter(bot) + (2.5 * bot.getSize()) > gameState.getWorld().getRadius()) {
+                if(distanceFromWorldCenter(bot) + (3 * bot.getSize()) > gameState.getWorld().getRadius()) {
                     playerAction.heading = (int)getDirectionPosition(bot, gameState.getWorld().getCenterPoint());
                 }
 
@@ -184,8 +184,8 @@ public class BotService {
                 // Kondisi ketika ingin teleport
                 if(isTeleport){
                     double jarak = getRealDistance(bot, nearestEnemy);
-                    double velo = 20;
-                    int timee = (int)jarak/(int)velo;
+                    int velo = 20;
+                    int timee = (int)jarak/velo;
                     if(tik+timee <= gameState.getWorld().getCurrentTick()){
                         playerAction.action = PlayerActions.TELEPORT;
                         System.out.println("TELEPORT");
@@ -237,7 +237,7 @@ public class BotService {
                         }
                         
                         // Puter balik mau nabrak edge
-                        if(distanceFromWorldCenter(bot) + (2.5 * bot.getSize()) > gameState.getWorld().getRadius()) {
+                        if(distanceFromWorldCenter(bot) + (3 * bot.getSize()) > gameState.getWorld().getRadius()) {
                             playerAction.heading = (int)getDirectionPosition(bot, gameState.getWorld().getCenterPoint());
                         }
                     }
