@@ -78,22 +78,24 @@ Langkah-langkah proses setup program adalah sebagai berikut:
 3. Clone Repository Github ini pada `..\starter-pack\starter-bots`
 4. Download file run.bat yang ada pada link berikut -> [(Link Runner)](https://drive.google.com/file/d/1MDKsT4PWi_Ag_GkloMwkZPAvl_bnMK-4/view?usp=share_link)
 5. Pindahkan file run.bat yang sudah didownload pada `..\starter-pack`
-6. Jalankan file run.bat hingga program selesai, jika sudah selesai bisa dicek pada `..\starter-pack\logger-publish`, akan terbentuk dua file GameStateLog.json baru
-7. Copy address dari lokasi file ini `..\starter-pack\logger-publish`
-8. Extract program Galaxio yang terdapat pada `..\starter-pack\visualiser`
-9. Jalankan program Galaxio yang sudah diekstrak sebelumnya
-10. Pada menu Game Galaxio, pilih menu options dan paste copy address lokasi file pada step nomor 7 di log files location
+6. Ubah isi direction file yang terdapat pada run.bat menjadi lokasi file JAS-029_029.jar yang terdapat pada device masing-masing
+![Screenshot_20230217_222524](https://user-images.githubusercontent.com/91790457/219695394-81e26dd6-eb71-4f33-ad02-31134f46218c.png)
+7. Jalankan file run.bat hingga program selesai, jika sudah selesai bisa dicek pada `..\starter-pack\logger-publish`, akan terbentuk dua file GameStateLog.json baru
+8. Copy address dari lokasi file ini `..\starter-pack\logger-publish`
+9. Extract program Galaxio yang terdapat pada `..\starter-pack\visualiser`
+10. Jalankan program Galaxio yang sudah diekstrak sebelumnya
+11. Pada menu Game Galaxio, pilih menu options dan paste copy address lokasi file pada step nomor 7 di log files location
 
 ![log_file_location](https://user-images.githubusercontent.com/91790457/218540322-fae3cf2e-c55f-47fb-b40f-d3292b64a0f2.png)
 
-11. Untuk melihat permainan, pilih menu load dan pilih data GameStateLog.json yang telah terbentuk sebelumnya
+12. Untuk melihat permainan, pilih menu load dan pilih data GameStateLog.json yang telah terbentuk sebelumnya
 
 ![load_log](https://user-images.githubusercontent.com/91790457/218541925-338ca780-1a1e-4066-a105-9f349418cadb.png)
 
 
 
-12. Klik start untuk melihat hasil permainan
-13. Jika ingin bermain lagi, bisa menjalankan file run.bat kembali dan membuka program Galaxio serta melakukan load file seperti step sebelumnya
+13. Klik start untuk melihat hasil permainan
+14. Jika ingin bermain lagi, bisa menjalankan file run.bat kembali dan membuka program Galaxio serta melakukan load file seperti step sebelumnya
 
 
 <p align="center"><b>SELAMAT BERMAIN DAN BERSENANG-SENANG :)</b></p>
