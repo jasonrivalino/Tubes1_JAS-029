@@ -32,11 +32,12 @@
 * [Deskripsi Singkat](#deskripsi-singkat)
 * [Struktur File](#struktur-file)
 * [Cara Menjalankan Program](#cara-menjalankan-program)
+* [Video Demo Penjelasan](#video-demo-penjelasan)
 * [Acknowledgements](#acknowledgements)
 * [Foto Bersama](#foto-bersama)
 
 ## Deskripsi Singkat 
-Galaxio adalah sebuah game battle royale yang mempertandingkan bot kapal anda dengan beberapa bot kapal yang lain. Setiap pemain akan memiliki sebuah bot kapal dan tujuan dari permainan adalah agar bot kapal anda yang tetap hidup hingga akhir permainan. Dalam tugas besar ini, akan diimplementasikan Strategi Algoritma pada game engine Galaxio dengan menggunakan bahasa pemrograman Java. Impementasi dilakukan pada bot kapal dengan menggunakan Algoritma Greedy agar bot kapal dapat memenangkan permainan. 
+Galaxio adalah sebuah game battle royale yang mempertandingkan bot kapal anda dengan beberapa bot kapal yang lain. Setiap pemain akan memiliki sebuah bot kapal dan tujuan dari permainan adalah agar bot kapal anda yang tetap hidup hingga akhir permainan. Dalam tugas besar ini, akan diimplementasikan Strategi Algoritma pada game engine Galaxio dengan menggunakan bahasa pemrograman Java. Impementasi dilakukan pada bot kapal dengan menggunakan Algoritma Greedy agar bot kapal dapat memenangkan permainan.
 
 
 ## Struktur File
@@ -92,9 +93,14 @@ Langkah-langkah proses setup program adalah sebagai berikut:
 
 <p align="center"><b>SELAMAT BERMAIN DAN BERSENANG-SENANG :)</b></p>
 
+## Video Demo Penjelasan
+Link: https://youtu.be/6f4_4flntqM
+
 ## Acknowledgements
 - Tuhan Yang Maha Esa
 - Dosen Mata Kuliah yaitu Pak Rinaldi (K1), Bu Ulfa (K2), dan Pak Rila (K3)
 - Kakak-Kakak Asisten Mata Kuliah Strategi Algoritma IF2211
 
 ## Foto Bersama
+![S__8781826](https://user-images.githubusercontent.com/91790457/219616892-8d468020-6479-4143-bc2c-6fa1e2303d2b.jpg)
+
