@@ -31,6 +31,7 @@
 ## Table of Contents
 * [Deskripsi Singkat](#deskripsi-singkat)
 * [Struktur File](#struktur-file)
+* [Requirements](#requirements)
 * [Cara Menjalankan Program](#cara-menjalankan-program)
 * [Video Demo Penjelasan](#video-demo-penjelasan)
 * [Acknowledgements](#acknowledgements)
@@ -65,7 +66,11 @@ Galaxio adalah sebuah game battle royale yang mempertandingkan bot kapal anda de
  ┣ 📜pom.xml
  ┗ 📜README.md
  ```
- 
+## Requirements
+1. Java ( minimal Java 11 )
+2. Maven ( jika ingin mengubah file `.jar` )
+3. .NET Core 3.1 dan .NET Core 5 ( jika membutuhkan reference bot )
+
 ## Cara Menjalankan Program
 Langkah-langkah proses setup program adalah sebagai berikut:
 1. Download starter-pack.zip yang terdapat pada link berikut -> [(Link Starter-Pack)](https://github.com/EntelectChallenge/2021-Galaxio/releases/tag/2021.3.2)
