@@ -98,3 +98,5 @@ Langkah-langkah proses setup program adalah sebagai berikut:
 - Kakak-Kakak Asisten Mata Kuliah Strategi Algoritma IF2211
 
 ## Foto Bersama
+![S__8781826](https://user-images.githubusercontent.com/91790457/219616892-8d468020-6479-4143-bc2c-6fa1e2303d2b.jpg)
+
